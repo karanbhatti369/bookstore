@@ -155,12 +155,54 @@ public class BookstoreManager {
         while (attributeToChange != 5);
     }
 
-  //gavin will add display book by author method 
+  //display book by author method 
 
-  //gavin will add display books underprice
+  private static void displayBooksByAuthor() {
+        System.out.print("Enter the author's name: ");
+        String authorName = readNonNumericString("Author's name: ");
+        findBooksBy(authorName);
+    }
+
+  //display books underprice
+
+  private static void displayBooksUnderPrice() {
+        System.out.print("Enter the price limit: ");
+        double priceLimit = readDouble("Price limit: ", 0, Double.MAX_VALUE);
+        findCheaperThan(priceLimit);
+    }
         
     
-   //gavin will add find books by author   
+   //find books by author  
+
+   private static void findBooksBy(String authorName) {
+        System.out.println("Books by " + authorName + ":");
+        boolean found = false;
+        for (Book book : inventory) {
+            if (book != null && book.getAuthor().equalsIgnoreCase(authorName)) {
+                System.out.println(book);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("No books found by " + authorName);
+        }
+    } 
+
+    //find cheaper than method
+
+    private static void findCheaperThan(double priceLimit) {
+        System.out.println("Books under $" + priceLimit + ":");
+        boolean found = false;
+        for (Book book : inventory) {
+            if (book != null && book.getPrice() <= priceLimit) {
+                System.out.println(book);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("No books found under $" + priceLimit);
+        }
+    }
 
     // Input Reading Helper Methods
     private static int readInt(String prompt, int min, int max) {
@@ -183,6 +225,54 @@ public class BookstoreManager {
     }
 
     //gavin will add other input reading helper method
+    private static long readLong(String prompt, long min, long max) {
+        long number;
+        while (true) {
+            try {
+                System.out.print(prompt);
+                number = scanner.nextLong();
+                scanner.nextLine(); // Consume newline
+                if (number >= min && number <= max) {
+                    return number;
+                } else {
+                    System.out.println("Please enter a number between " + min + " and " + max + ".");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid long.");
+                scanner.nextLine(); // Consume invalid input
+            }
+        }
+    }
+    private static double readDouble(String prompt, double min, double max) {
+        double number;
+        while (true) {
+            try {
+                System.out.print(prompt);
+                number = scanner.nextDouble();
+                scanner.nextLine(); // Consume newline
+                if (number >= min && number <= max) {
+                    return number;
+                } else {
+                    System.out.println("Please enter a number between " + min + " and " + max + ".");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid double.");
+                scanner.nextLine(); // Consume invalid input
+            }
+        }
+    }
 
+    private static String readNonNumericString(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            // Check if the string contains at least one alphabetic character
+            if (!input.isEmpty() && input.matches(".*[a-zA-Z]+.*")) {
+                return input;
+            } else {
+                System.out.println("Invalid input. Please enter a valid string (must include alphabetic characters).");
+            }
+        }
+    }
 
 }
