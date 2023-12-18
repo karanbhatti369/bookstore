@@ -1,19 +1,27 @@
-import java.util.Scanner;
-import java.util.InputMismatchException;
+import java.util.Scanner; //used for input
+import java.util.InputMismatchException;//for handling errors in input type.
 
 public class BookstoreManager {
 
     private static final String PASSWORD = "pargol";
     private static Book[] inventory;
-    private static Scanner scanner = new Scanner(System.in);
-    private static int totalPasswordAttempts = 0;
+    private static Scanner scanner = new Scanner(System.in);//object for reading inputs from the console.
+    private static int totalPasswordAttempts = 0;//Tracks the total number of password attempts.
+
+// ANSI Color Code Constants
+public static final String ANSI_RESET = "\u001B[0m";
+public static final String ANSI_RED = "\u001B[31m";
+public static final String ANSI_GREEN = "\u001B[32m";
+
 
     public static void main(String[] args) {
-        System.out.println("Welcome to the Bookstore Manager!");
+        System.out.println(ANSI_GREEN+"Welcome to the Bookstore Manager!"+ANSI_RESET);
 
-        int maxBooks = readInt("Enter the maximum number of books: ", 1, Integer.MAX_VALUE);
+        int maxBooks = readInt("Enter the maximum number of books: ", 1, Integer.MAX_VALUE);//Reads the maximum number of books that can be stored.
+        
         inventory = new Book[maxBooks];
 
+        //loop to display the menu
         int choice;
         do {
             printMenuOptions();
@@ -21,19 +29,24 @@ public class BookstoreManager {
             processMenuChoice(choice);
         } while (choice != 5);
 
-        System.out.println("Thank you for using Bookstore Manager. Goodbye!");
+        System.out.println(ANSI_GREEN+"Thank you for using Bookstore Manager. Goodbye!"+ANSI_RESET);
     }
 
+    //displays the different options available to the user.
     private static void printMenuOptions() {
-        System.out.println("\nWhat do you want to do?");
+        System.out.println("\n========================================");
+        System.out.println("           Bookstore Manager");
+        System.out.println("========================================");
         System.out.println("1. Enter new books (password required)");
         System.out.println("2. Change information of a book (password required)");
         System.out.println("3. Display all books by a specific author");
-        System.out.println("4. Display all books under a certain a price.");
+        System.out.println("4. Display all books under a certain price.");
         System.out.println("5. Quit");
         System.out.print("Please enter your choice > ");
     }
 
+
+    //takes the user's choice and calls the appropriate method based on the choice.
     private static void processMenuChoice(int choice) {
         switch (choice) {
             case 1:
@@ -64,10 +77,10 @@ public class BookstoreManager {
             if (inputPassword.equals(PASSWORD)) {
                 return true;
             } else {
-                System.out.println("Incorrect password. Please try again.");
+                System.out.println(ANSI_RED+"Incorrect password. Please try again."+ANSI_RESET);
                 totalPasswordAttempts++;
                 if (totalPasswordAttempts >= MAX_TOTAL_ATTEMPTS) {
-                    System.out.println("Program detected suspicious activities and will terminate immediately!");
+                    System.out.println(ANSI_RED+"Program detected suspicious activities and will terminate immediately!"+ANSI_RESET);
                     System.exit(0); // Terminates the program
                 }
             }
@@ -86,7 +99,7 @@ public class BookstoreManager {
         int spaceAvailable = inventory.length - Book.findNumberOfCreatedBooks();
 
         if (numBooksToAdd > spaceAvailable) {
-            System.out.println("Not enough space. You can only add up to " + spaceAvailable + " more books.");
+            System.out.println(ANSI_RED+"Not enough space. You can only add up to " + spaceAvailable + " more books."+ANSI_RESET);
             return;
         }
 
@@ -105,7 +118,7 @@ public class BookstoreManager {
             inventory[Book.findNumberOfCreatedBooks()] = new Book(title, author, isbn, price);
         }
     }
-
+// to modify details of existing books
     private static void changeBookInformation() {
         if (!isPasswordCorrect()) {
             return;
@@ -115,7 +128,7 @@ public class BookstoreManager {
         int bookNumber = readInt("", 0, inventory.length - 1);
 
         if (inventory[bookNumber] == null) {
-            System.out.println("No book found at this number. Returning to main menu.");
+            System.out.println(ANSI_RED+"No book found at this number. Returning to main menu."+ANSI_RESET);
             return;
         }
 
@@ -149,21 +162,24 @@ public class BookstoreManager {
                     break;
             }
           if(attributeToChange != 5) {  
-//            
+            
            System.out.println(bookToEdit);}
         } 
         while (attributeToChange != 5);
     }
 
-  //display book by author method 
 
+    //display methods 
+
+
+  //display book by author method 
   private static void displayBooksByAuthor() {
         System.out.print("Enter the author's name: ");
         String authorName = readNonNumericString("Author's name: ");
         findBooksBy(authorName);
     }
 
-  //display books underprice
+  //display books under specific price
 
   private static void displayBooksUnderPrice() {
         System.out.print("Enter the price limit: ");
@@ -174,35 +190,49 @@ public class BookstoreManager {
     
    //find books by author  
 
-   private static void findBooksBy(String authorName) {
-        System.out.println("Books by " + authorName + ":");
-        boolean found = false;
-        for (Book book : inventory) {
-            if (book != null && book.getAuthor().equalsIgnoreCase(authorName)) {
-                System.out.println(book);
-                found = true;
-            }
+private static void findBooksBy(String authorName) {
+    System.out.println("\nBooks by " + authorName + ":");
+    System.out.println("----------------------------------------");
+    System.out.printf("%-10s %-30s %-30s %-15s %-10s\n", "Index", "Title", "Author", "ISBN", "Price");
+    System.out.println("----------------------------------------");
+    boolean found = false;
+    for (int i = 0; i < inventory.length; i++) {
+        Book book = inventory[i];
+        if (book != null && book.getAuthor().equalsIgnoreCase(authorName)) {
+            System.out.printf("%-10d %-30s %-30s %-15d $%.2f\n", 
+                              i, book.getTitle(), book.getAuthor(), book.getISBN(), book.getPrice());
+            found = true;
         }
-        if (!found) {
-            System.out.println("No books found by " + authorName);
-        }
-    } 
+    }
+    if (!found) {
+        System.out.println(ANSI_RED+"No books found by " + authorName+ANSI_RESET);
+    }
+}
+
 
     //find cheaper than method
 
     private static void findCheaperThan(double priceLimit) {
-        System.out.println("Books under $" + priceLimit + ":");
+        System.out.println("\nBooks under $" + priceLimit + ":");
+        System.out.println("----------------------------------------");
+        System.out.printf("%-10s %-30s %-30s %-15s %-10s\n", "Index", "Title", "Author", "ISBN", "Price");
+        System.out.println("----------------------------------------");
         boolean found = false;
-        for (Book book : inventory) {
+    
+        for (int i = 0; i < inventory.length; i++) {
+            Book book = inventory[i];
             if (book != null && book.getPrice() <= priceLimit) {
-                System.out.println(book);
+                System.out.printf("%-10d %-30s %-30s %-15d $%.2f\n", 
+                                  i, book.getTitle(), book.getAuthor(), book.getISBN(), book.getPrice());
                 found = true;
             }
         }
+    
         if (!found) {
-            System.out.println("No books found under $" + priceLimit);
+            System.out.println(ANSI_RED+"No books found under $" + priceLimit+ANSI_RESET);
         }
     }
+    
 
     // Input Reading Helper Methods
     private static int readInt(String prompt, int min, int max) {
@@ -215,16 +245,16 @@ public class BookstoreManager {
                 if (number >= min && number <= max) {
                     return number;
                 } else {
-                    System.out.println("Please enter a number between " + min + " and " + max + ".");
+                    System.out.println( ANSI_RED+"Please enter a number between " + min + " and " + max + "."+ANSI_RESET);
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid integer.");
+                System.out.println(ANSI_RED+"Invalid input. Please enter a valid integer."+ANSI_RESET);
                 scanner.nextLine(); // Consume invalid input
             }
         }
     }
 
-    //gavin will add other input reading helper method
+  
     private static long readLong(String prompt, long min, long max) {
         long number;
         while (true) {
@@ -238,7 +268,7 @@ public class BookstoreManager {
                     System.out.println("Please enter a number between " + min + " and " + max + ".");
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid long.");
+                System.out.println(ANSI_RED+"Invalid input. Please enter a valid long."+ANSI_RESET);
                 scanner.nextLine(); // Consume invalid input
             }
         }
@@ -256,7 +286,7 @@ public class BookstoreManager {
                     System.out.println("Please enter a number between " + min + " and " + max + ".");
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid double.");
+                System.out.println(ANSI_RED+"Invalid input. Please enter a valid double."+ANSI_RESET);
                 scanner.nextLine(); // Consume invalid input
             }
         }
@@ -267,8 +297,8 @@ public class BookstoreManager {
             System.out.print(prompt);
             String input = scanner.nextLine().trim();
             // Check if the string contains at least one alphabetic character
-            if (!input.isEmpty() && input.matches(".*[a-zA-Z]+.*")) {
-                return input;
+            if (!input.isEmpty() && input.length() <= 12 && input.matches("[a-zA-Z-' ]+")) {
+                return input.replaceAll("\\s{2,}", " "); // Replace multiple whitespaces with a single space
             } else {
                 System.out.println("Invalid input. Please enter a valid string (must include alphabetic characters).");
             }
