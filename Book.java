@@ -6,6 +6,7 @@ public class Book {             // Defines a new class named Book
 
     // Constructor for the Book class
     public Book(String title, String author, long ISBN, double price) { 
+        this.title = title;
         this.author = author;   // Sets the author's name, ISBN Number, Price for this book.
         this.ISBN = ISBN;       
         this.price = price;     
