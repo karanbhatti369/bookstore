@@ -1,73 +1,84 @@
-public class Book {             // Defines a new class named Book
-    private String author;      // Private variable to hold the author's name, ISBN no., Price
-    private long ISBN;          
-    private double price;       
-    private static int numberOfBooksCreated = 0; // Static variable to keep track of the number of Book objects created
+public class Book {
+    // Private instance variables for the Book class
+    private String title;  // Holds the title of the book
+    private String author; // Holds the author's name
+    private long ISBN;     // Stores the ISBN number of the book
+    private double price;  // Stores the price of the book
 
-    // Constructor for the Book class
-    public Book(String title, String author, long ISBN, double price) { 
-        this.title = title;
-        this.author = author;   // Sets the author's name, ISBN Number, Price for this book.
-        this.ISBN = ISBN;       
-        this.price = price;     
-        numberOfBooksCreated++; // Increments the static counter of created books
+    // Static variable to keep track of the number of Book objects created
+    private static int numberOfBooksCreated = 0;
+
+    // Constructor to initialize a new Book object
+    public Book(String title, String author, long ISBN, double price) {
+        this.title = title;             // Sets the title of the book
+        this.author = author;           // Sets the author's name
+        this.ISBN = ISBN;               // Sets the ISBN number
+        this.price = price;             // Sets the price of the book
+        numberOfBooksCreated++;         // Increments the count of books created
     }
 
     // Setters and Getters
-    public void setTitle(String title) { // Setter for title
-        this.title = title;              // Sets the title of the book
+    // Setter method for title
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getTitle() { // Getter for title
-        return title;          // Returns the book's title
+    // Getter method for title
+    public String getTitle() {
+        return title;
     }
 
-    public void setISBN(long ISBN) { // Setter for ISBN
-        this.ISBN = ISBN;             // Sets the book's ISBN
+    // Setter method for ISBN
+    public void setISBN(long ISBN) {
+        this.ISBN = ISBN;
     }
 
-    public void setAuthor(String author) { // Setter for author
-        this.author = author;              // Sets the book's author
+    // Setter method for author
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
-    public void setPrice(double price) { // Setter for price
-        this.price = price;               // Sets the book's price
+    // Setter method for price
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     // Getter for ISBN
     public long getISBN() {
-        return this.ISBN; // Returns the book's ISBN
+        return this.ISBN;
     }
 
-    // Getter for Author
+    // Getter for author
     public String getAuthor() {
-        return this.author; // Returns the book's author
+        return this.author;
     }
 
-    // Getter for Price
+    // Getter for price
     public double getPrice() {
-        return this.price; // Returns the book's price
+        return this.price;
     }
+    // Note: Similar setters and getters for author, ISBN, and price are included
 
-    // Static method to find the number of books created
+    // Static method to find the total number of books created
     public static int findNumberOfCreatedBooks() {
-        return numberOfBooksCreated; // Returns the total number of Book objects created
+        return numberOfBooksCreated;
     }
 
+    // Overridden equals method to compare two Book objects
     @Override
-    public boolean equals(Object obj) { // Overridden equals method for object comparison
-        if (this == obj) return true;   // Check if the objects are the same
-        if (obj == null || getClass() != obj.getClass()) return false; // Check if object is not null and is of the same class
-        Book book = (Book) obj;        // Cast the object to Book for further comparison
-        return ISBN == book.ISBN && Double.compare(book.price, price) == 0; // Compare ISBN and price for equality
+    public boolean equals(Object obj) {
+        if (this == obj) return true;  // Check if it's the same object
+        if (obj == null || getClass() != obj.getClass()) return false; // Check for null and compare classes
+        Book book = (Book) obj;        // Type cast obj to Book
+        return ISBN == book.ISBN && Double.compare(book.price, price) == 0; // Compare ISBN and price
     }
 
+    // Overridden toString method to provide a string representation of the Book object
     @Override
-    public String toString() { // Overridden toString method for representing the Book object as a String
+    public String toString() {
         return "Author: " + this.author +
                "\nTitle: " + this.title +
                "\nISBN: " + this.ISBN +
-               "\nPrice: $" + this.price; // Constructs and returns the string representation of the Book
+               "\nPrice: $" + this.price;
     }
 }
-
